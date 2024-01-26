@@ -1,30 +1,22 @@
 package smsimulator.Controler;
+import java.sql.*;
+import smsimulator.model.InvestorsCompaniesCreator;
+import smsimulator.model.TradingDaySimulation;
+import smsimulator.model.company.Company;
+import smsimulator.model.company.MySQLCompanyDAO;
+import smsimulator.model.investor.Investor;
+import smsimulator.model.investor.MySQLInvestorDAO;
+import smsimulator.model.transaction.MySQLTransactionDAO;
+import smsimulator.model.transaction.Transaction;
+import smsimulator.view.Component;
+import smsimulator.view.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Scanner;
-
-import smsimulator.model.investor.Investor;
-import smsimulator.model.company.Company;
-import smsimulator.model.transaction.Transaction;
-
-import smsimulator.view.MainFrame;
-import smsimulator.view.Component;
-
-import smsimulator.view.GUITableInvestors;
-import smsimulator.view.GUITableCompanies;
-import smsimulator.view.GUITableTransactions;
-
-import smsimulator.view.GUIMenuBar;
-
-import smsimulator.model.InvestorsCompaniesCreator;
-import smsimulator.model.TradingDaySimulation;
-import smsimulator.model.company.MySQLCompanyDAO;
-import smsimulator.model.investor.MySQLInvestorDAO;
-import smsimulator.model.transaction.MySQLTransactionDAO;
-import smsimulator.view.GUIOptionPane;
-import smsimulator.view.GUITablesSummary;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Concrete mediator. All chaotic communications between concrete components
@@ -51,6 +43,8 @@ public class Mediator implements MediatorInterface {
 	private JPanel panelCompaniesMaxcapital, panelCompaniesMincapital;
 	private JPanel panelInvestorsMaxShares, panelInvestorsMinShares;
 	private JPanel panelInvestorsMaxCompanies, panelInvestorsMinCompanies;
+	private JButton editButton;
+
 
 	private boolean newSim;
 
@@ -64,34 +58,35 @@ public class Mediator implements MediatorInterface {
 	public void registerComponent(Component component) {
 		component.setMediator(this);
 		switch (component.getName()) {
-		case "PanelInvestors":
-			tableInvestors = (GUITableInvestors) component;
-			break;
-		case "PanelCompanies":
-			tableCompanies = (GUITableCompanies) component;
-			break;
-		case "PanelTransactions":
-			tableTransactions = (GUITableTransactions) component;
-			break;
-		case "MenuBar":
-			menuBar = (GUIMenuBar) component;
-			break;
-		case "GUITablesSummary":
-			tableSummary = (GUITablesSummary) component;
-			break;
-		case "GUIOptionPane":
-			optionPane = (GUIOptionPane) component;
-			break;
+			case "PanelInvestors":
+				tableInvestors = (GUITableInvestors) component;
+				break;
+			case "PanelCompanies":
+				tableCompanies = (GUITableCompanies) component;
+				break;
+			case "PanelTransactions":
+				tableTransactions = (GUITableTransactions) component;
+				break;
+			case "MenuBar":
+				menuBar = (GUIMenuBar) component;
+				break;
+			case "GUITablesSummary":
+				tableSummary = (GUITablesSummary) component;
+				break;
+			case "GUIOptionPane":
+				optionPane = (GUIOptionPane) component;
+				break;
 		}
 	}
 
 	@Override
 	public void createGUI() {
 
-		frame = new MainFrame("Stock Market Simulator", 1145, 685, "src/smsimulator/view/icon.png");
+		frame = new MainFrame("Stock Market Simulator", 1345, 741, "src/smsimulator/view/icon.png");
+
 		frame.setJMenuBar(menuBar);
 
-		GridLayout grid1 = new GridLayout(2, 2);
+		GridLayout grid1 = new GridLayout(3, 4);
 		frame.setLayout(grid1);
 
 		// First Panel
@@ -100,7 +95,7 @@ public class Mediator implements MediatorInterface {
 				BorderFactory.createTitledBorder(null, "Transactions", 0, 0, new Font("PLAIN", Font.BOLD, 12)));
 		panelTransactions.setToolTipText("Transactions");
 		JScrollPane scrollPaneT = new JScrollPane(tableTransactions.createTableTransactions(transactions));
-		scrollPaneT.setPreferredSize(new Dimension(750, 420));
+		scrollPaneT.setPreferredSize(new Dimension(750, 280));
 		panelTransactions.add(scrollPaneT);
 		panelTransactions.revalidate();
 		frame.add(panelTransactions);
@@ -186,10 +181,25 @@ public class Mediator implements MediatorInterface {
 				.setBorder(BorderFactory.createTitledBorder(null, "Investors", 0, 0, new Font("PLAIN", Font.BOLD, 12)));
 		panelInvestors.setToolTipText("Investors");
 		JScrollPane scrollPaneI = new JScrollPane(tableInvestors.createTableInvestors(investors));
-		scrollPaneI.setPreferredSize(new Dimension(750, 420));
+		scrollPaneI.setPreferredSize(new Dimension(750, 300));
 		panelInvestors.add(scrollPaneI);
 		panelInvestors.revalidate();
 		frame.add(panelInvestors);
+		editButton = new JButton("Edit Your name");
+		editButton.setSize(500, 300);
+		editButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				editInvestors("admin");
+			}
+
+		});
+
+		JPanel buttonPanel = new JPanel(new FlowLayout());
+		buttonPanel.add(editButton);
+		frame.add(buttonPanel, BorderLayout.SOUTH);
+
+
 
 		// 4
 		panelCompanies = new JPanel();
@@ -197,7 +207,7 @@ public class Mediator implements MediatorInterface {
 				.setBorder(BorderFactory.createTitledBorder(null, "Companies", 0, 0, new Font("PLAIN", Font.BOLD, 12)));
 		panelCompanies.setToolTipText("Companies");
 		JScrollPane scrollPanelC = new JScrollPane(tableCompanies.createTableCompanies(companies));
-		scrollPanelC.setPreferredSize(new Dimension(750, 420));
+		scrollPanelC.setPreferredSize(new Dimension(750, 300));
 		panelCompanies.add(scrollPanelC);
 		panelCompanies.revalidate();
 		frame.add(panelCompanies);
@@ -480,6 +490,18 @@ public class Mediator implements MediatorInterface {
 	@Override
 	public void barChartResults() {
 
+	}
+
+
+	private void editInvestors(String name) {
+	try{
+		Connection connection = DatabaseHelper.getInstance().getInstance().getConnection();
+		String sqlQuery = "UPDATE Investors SET name = FFF";
+		PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+		preparedStatement.setString(1, name);
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
 	}
 
 }

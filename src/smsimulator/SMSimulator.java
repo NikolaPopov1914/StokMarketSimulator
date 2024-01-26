@@ -33,6 +33,8 @@ public class SMSimulator {
         loginForm.setMediator(mediator);
         registrationForm.setMediator(mediator);
         forgotPasswordForm.setMediator(mediator);
+		registrationForm.setVisible(false);
+		forgotPasswordForm.setVisible(false);
         loginForm.setVisible(true);
 
         // Wait for the user to log in

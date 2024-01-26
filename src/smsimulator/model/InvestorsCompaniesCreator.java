@@ -48,7 +48,7 @@ public class InvestorsCompaniesCreator {
 	}
 
 	public void setInvestors(int number) {
-		String[] names = { "Bocheto", "The All-Mighty Bull", "Luis Miguel", "Rumyana Laskina", "Zosia Okiniehchshczcshhczcs",
+		String[] names = {"admin", "Bocheto", "The All-Mighty Bull", "Luis Miguel", "Rumyana Laskina", "Zosia Okiniehchshczcshhczcs",
 				"The lil Savani", "Sacheto", "Gjorcheto Pashalijski", "Hajde be Deyan", "Divanchester", "Yoto Vpishe", "Susama bin Laden",
 				"Hojlund", "Jewish Dwarf", "Roberto Carlos", "Caroline Queen", "Leo Pessi", "Nina Nana Nona", "Herr Getschev",
 				"Darwizzy", "Gocheto", "TE55", "Nacheto", "Mani Banani", "Gosho ot Pochivka",
@@ -65,10 +65,9 @@ public class InvestorsCompaniesCreator {
 				"Jerry Rivera", "José Alberto El Canario", "El Gran Combo", "Los Adolescentes", "Maelo Ruiz",
 				"Joaquin Sabina", "Victor Jara", "Facundo Cabral", "Violeta Parra", "Mercedes Sosa",
 				"Caetano Veloso", "Victor Heredia", "Alfredo Zitarrosa", "Manu Chao", "Vicentico", "El León Santillán",
-				"Diomedes Díaz", "Rafael Orozco", "El Binomio de Oro", "Los Diablitos", "Daniel Celedón", "Shakira",
-				"Sofiq"};
+				"Diomedes Díaz", "Rafael Orozco", "El Binomio de Oro", "Los Diablitos", "Daniel Celedón", "Shakira"};
 		for (int i = 0; i < number; i++) {
-			investors.add(new Investor(names[i], getRandomNumberInRange(1000, 10000)));
+			investors.add(new Investor(names[i], getRandomNumberInRange(1, 10000000)));
 		}
 		System.out.println(names.length);
 	}

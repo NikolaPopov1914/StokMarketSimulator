@@ -33,21 +33,27 @@ public class FormMediator {
 		// Check credentials against the database
 		if (checkCredentials(name, password)) {
 			JOptionPane.showMessageDialog(loginForm, "Login successful!");
+			loginForm.setLoggedIn(true);
+			loginForm.setVisible(false);
 		} else {
 			JOptionPane.showMessageDialog(loginForm, "Invalid credentials. Please try again.");
 		}
 	}
 
 	public void onRegisterButtonClicked(String name, String password, String repeatPassword) {
-		// Check if passwords match
+		// Check if passwords don't match
+		loginForm.setVisible(false);
 		if (!password.equals(repeatPassword)) {
 			JOptionPane.showMessageDialog(registrationForm, "Passwords do not match. Please try again.");
+
 			return;
+
 		}
 
 		// Save user to the database
 		if (saveUserToDatabase(name, password)) {
 			JOptionPane.showMessageDialog(registrationForm, "Registration successful!");
+
 		} else {
 			JOptionPane.showMessageDialog(registrationForm, "Registration failed. Please try again.");
 		}
@@ -57,6 +63,7 @@ public class FormMediator {
 		// Check if passwords match
 		if (!password.equals(repeatPassword)) {
 			JOptionPane.showMessageDialog(forgotPasswordForm, "Passwords do not match. Please try again.");
+			loginForm.setVisible(false);
 			return;
 		}
 
